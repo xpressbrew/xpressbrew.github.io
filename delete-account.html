@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delete your account — Xpress Brew</title>
+<link rel="stylesheet" href="/style.css">
+<style>
+  form { display: grid; gap: 14px; }
+  label { display: grid; gap: 6px; font-weight: 600; font-size: 15px; }
+  input, select, textarea { font: inherit; color: var(--espresso); background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px; min-height: 46px; }
+  textarea { min-height: 140px; resize: vertical; }
+  button { font: inherit; font-weight: 700; background: var(--mocha); color: #fff; border: none; border-radius: 12px; min-height: 50px; cursor: pointer; }
+  #status { min-height: 24px; font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+<header><a href="/">Xpress Brew</a></header>
+<h1>Delete your Xpress Brew account</h1>
+<p><strong>Fastest:</strong> in the app open <strong>Me → Account → Delete my account</strong>. Your account and data are removed straight away.</p>
+<p>Can't use the app any more? Send the form below from the email address of your account. We delete the account within 7 days and
+confirm by email.</p>
+<div class="card">
+<p><strong>What is deleted:</strong> your account, profile, recipes, reviews, brew history, Circles you own, taste profiles,
+support messages and business applications.</p>
+<p><strong>What is kept:</strong> nothing that identifies you. Payment records stay with Apple or Google, under their policies.</p>
+<p class="muted">Deleting your account does not cancel a subscription — cancel it in your App Store or Google Play settings first.</p>
+</div>
+<form id="f" class="card">
+  <label>Your account email<input id="email" type="email" autocomplete="email" required></label>
+  <label>Anything we should know (optional)<textarea id="message" maxlength="1000"></textarea></label>
+  <button type="submit">Request deletion</button>
+  <p id="status" role="status"></p>
+</form>
+<footer><a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Use</a> · <a href="/contact">Contact</a></footer>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+<script src="/config.js"></script>
+<script>
+  const cfg = window.XPRESS_CONFIG || {};
+  const ready = cfg.supabaseUrl && !cfg.supabaseUrl.includes('YOUR-PROJECT');
+  const sb = ready ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
+  const st = document.getElementById('status');
+  document.getElementById('f').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!sb) { st.textContent = 'This form is not connected yet. Use Me → Account → Delete my account in the app.'; return; }
+    st.textContent = 'Sending…';
+    const extra = document.getElementById('message').value.trim();
+    const { error } = await sb.rpc('submit_support_request', {
+      p_name: null, p_email: document.getElementById('email').value, p_topic: 'privacy',
+      p_message: 'Please delete my Xpress Brew account.' + (extra ? '\n\n' + extra : ''), p_source: 'web',
+    });
+    if (error) { st.textContent = error.message; return; }
+    e.target.reset();
+    st.textContent = 'Request received. We will delete the account and confirm by email within 7 days.';
+  });
+</script>
+</body>
+</html>

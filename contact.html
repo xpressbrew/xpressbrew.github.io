@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact — Xpress Brew</title>
+<link rel="stylesheet" href="/style.css">
+<style>
+  form { display: grid; gap: 14px; }
+  label { display: grid; gap: 6px; font-weight: 600; font-size: 15px; }
+  input, select, textarea { font: inherit; color: var(--espresso); background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px; min-height: 46px; }
+  textarea { min-height: 140px; resize: vertical; }
+  button { font: inherit; font-weight: 700; background: var(--mocha); color: #fff; border: none; border-radius: 12px; min-height: 50px; cursor: pointer; }
+  #status { min-height: 24px; font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+<header><a href="/">Xpress Brew</a></header>
+<h1>Contact us</h1>
+<p class="muted">Questions about the app, your subscription, your data, or a business badge. We reply by email, usually within 2 working days.
+If you have the app, you can also use Me → Help &amp; support.</p>
+<form id="f" class="card">
+  <label>Your name<input id="name" autocomplete="name"></label>
+  <label>Your email<input id="email" type="email" autocomplete="email" required></label>
+  <label>Topic
+    <select id="topic">
+      <option value="help">Help using the app</option><option value="billing">Subscription &amp; billing</option>
+      <option value="privacy">Privacy &amp; my data</option><option value="business">Business badge</option>
+      <option value="bug">Something is broken</option><option value="idea">Idea</option><option value="other">Other</option>
+    </select></label>
+  <label>Message<textarea id="message" required minlength="5" maxlength="3000"></textarea></label>
+  <button type="submit">Send</button>
+  <p id="status" role="status"></p>
+</form>
+<footer><a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Use</a></footer>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+<script src="/config.js"></script>
+<script>
+  const cfg = window.XPRESS_CONFIG || {};
+  const ready = cfg.supabaseUrl && !cfg.supabaseUrl.includes('YOUR-PROJECT');
+  const sb = ready ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
+  const st = document.getElementById('status');
+  document.getElementById('f').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!sb) { st.textContent = 'The contact form is not connected yet.'; return; }
+    st.textContent = 'Sending…';
+    const { error } = await sb.rpc('submit_support_request', {
+      p_name: document.getElementById('name').value, p_email: document.getElementById('email').value,
+      p_topic: document.getElementById('topic').value, p_message: document.getElementById('message').value, p_source: 'web',
+    });
+    if (error) { st.textContent = error.message; return; }
+    e.target.reset();
+    st.textContent = "Thanks — your message is in. We'll reply by email.";
+  });
+</script>
+</body>
+</html>

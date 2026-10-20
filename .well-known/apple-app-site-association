@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["F24MGQ5K74.app.xpressbrew"],
+        "components": [
+          { "/": "/r/*" }, { "/": "/i/*" }, { "/": "/join/*" }, { "/": "/bean/*" }
+        ]
+      }
+    ]
+  }
+}

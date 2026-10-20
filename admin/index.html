@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Xpress Brew Admin</title>
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+<div id="login" class="login" hidden>
+  <form id="loginForm" class="panel">
+    <h1>Xpress Brew Admin</h1>
+    <p class="muted">Staff only. Sign in with your Xpress Brew account.</p>
+    <label>Email<input id="loginEmail" type="email" autocomplete="username" required></label>
+    <label>Password<input id="loginPassword" type="password" autocomplete="current-password" required></label>
+    <button class="btn primary" type="submit">Sign in</button>
+    <p id="loginError" class="error" role="alert"></p>
+    <a href="#" id="forgotLink" class="muted">Forgot password?</a>
+  </form>
+</div>
+
+<div id="app" class="shell" hidden>
+  <nav class="side" aria-label="Admin sections">
+    <div class="brand">Xpress Brew <span>Admin</span></div>
+    <button data-view="overview" class="nav active">Overview</button>
+    <button data-view="inbox" class="nav">Inbox <b id="badgeInbox"></b></button>
+    <button data-view="business" class="nav">Businesses <b id="badgeBusiness"></b></button>
+    <button data-view="reviews" class="nav">Reviews <b id="badgeReviews"></b></button>
+    <button data-view="users" class="nav">Users</button>
+    <button data-view="subs" class="nav">Subscriptions</button>
+    <button data-view="beans" class="nav">Coffees</button>
+    <button data-view="recipes" class="nav">Recipes</button>
+    <button data-view="circles" class="nav">Circles</button>
+    <button data-view="codes" class="nav">Access codes</button>
+    <button data-view="filter" class="nav">Word filter</button>
+    <button data-view="settings" class="nav">App settings</button>
+    <div class="who"><span id="whoami"></span><button id="signOut" class="link">Sign out</button></div>
+  </nav>
+  <main class="content">
+    <div id="demoBanner" class="banner" hidden>Demo mode — sample data. Add your Supabase URL and anon key to <code>/config.js</code> to manage the real app.</div>
+    <section id="view-overview"></section>
+    <section id="view-inbox" hidden></section>
+    <section id="view-business" hidden></section>
+    <section id="view-reviews" hidden></section>
+    <section id="view-users" hidden></section>
+    <section id="view-subs" hidden></section>
+    <section id="view-beans" hidden></section>
+    <section id="view-recipes" hidden></section>
+    <section id="view-circles" hidden></section>
+    <section id="view-codes" hidden></section>
+    <section id="view-settings" hidden></section>
+    <section id="view-filter" hidden></section>
+  </main>
+</div>
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+<script src="/config.js"></script>
+<script src="/admin/admin.js"></script>
+</body>
+</html>

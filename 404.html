@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xpress Brew</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main>
+<header><a href="/">Xpress Brew</a></header>
+<div id="link" hidden>
+  <h1>Open this in Xpress Brew</h1>
+  <p>This link opens a recipe, coffee or Circle invite in the Xpress Brew app.</p>
+  <p><a class="btn" id="open" href="#">Open the app</a></p>
+  <p class="muted">Don't have it yet? Xpress Brew is coming soon to the App Store and Google Play.</p>
+</div>
+<div id="missing" hidden>
+  <h1>Page not found</h1>
+  <p><a href="/">Go to the home page</a></p>
+</div>
+</main>
+<script>
+  // GitHub Pages shows this page for any address it doesn't have, including shared app links
+  // (/r/…, /i/…, /join/…, /bean/…). If the app is installed, the link opens the app directly.
+  var isAppLink = /^\/(r|i|join|bean)\//.test(location.pathname);
+  document.getElementById(isAppLink ? 'link' : 'missing').hidden = false;
+  if (isAppLink) document.getElementById('open').href = 'xpressbrew:/' + location.pathname;
+</script>
+</body>
+</html>
