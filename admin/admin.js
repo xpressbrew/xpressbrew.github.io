@@ -1,4 +1,4 @@
-/* Xpress Brew owner admin. Every action is checked again by the database / server (staff only). */
+/* XpressBrew owner admin. Every action is checked again by the database / server (staff only). */
 (function () {
   'use strict';
   const cfg = window.XPRESS_CONFIG || {};
@@ -86,7 +86,7 @@
     requests: [
       { id: 'r1', topic: 'billing', source: 'app', name: 'Mariam', email: 'mariam@example.com', message: 'I upgraded to Pro yearly but the app still shows Starter.', status: 'open', staff_note: '', created_at: ago(0.2) },
       { id: 'r2', topic: 'help', source: 'web', name: 'Omar', email: 'omar@example.com', message: 'My machine is not found when I search. It is switched on.', status: 'open', staff_note: '', created_at: ago(1) },
-      { id: 'r3', topic: 'privacy', source: 'web', name: '', email: 'old.user@example.com', message: 'Please delete my Xpress Brew account.', status: 'open', staff_note: '', created_at: ago(2) },
+      { id: 'r3', topic: 'privacy', source: 'web', name: '', email: 'old.user@example.com', message: 'Please delete my XpressBrew account.', status: 'open', staff_note: '', created_at: ago(2) },
       { id: 'r4', topic: 'idea', source: 'app', name: 'Lina', email: 'lina@example.com', message: 'Please add iced coffee recipes!', status: 'answered', staff_note: 'On roadmap', created_at: ago(6) },
     ],
     businesses: [
@@ -227,7 +227,7 @@
           ${/delete my .*account/i.test(r.message) && r.email ? `<p class="muted">Account deletion request — find the person under <button class="link" data-act="findUser" data-v="${esc(r.email)}">Users</button>, check the email matches, then Delete account.</p>` : ''}
           <label>Private note<textarea data-note="${esc(r.id)}" placeholder="Only staff see this">${esc(r.staff_note || '')}</textarea></label>
           <div class="row">
-            ${r.email ? `<a class="btn primary" href="mailto:${esc(r.email)}?subject=${encodeURIComponent('Re: your Xpress Brew message')}&body=${encodeURIComponent('\n\n---\nYou wrote:\n' + r.message)}" data-act="replied" data-id="${esc(r.id)}">Reply by email</a>` : ''}
+            ${r.email ? `<a class="btn primary" href="mailto:${esc(r.email)}?subject=${encodeURIComponent('Re: your XpressBrew message')}&body=${encodeURIComponent('\n\n---\nYou wrote:\n' + r.message)}" data-act="replied" data-id="${esc(r.id)}">Reply by email</a>` : ''}
             <button class="btn sage" data-act="reqStatus" data-id="${esc(r.id)}" data-v="answered">Mark answered</button>
             <button class="btn" data-act="reqStatus" data-id="${esc(r.id)}" data-v="closed">Close</button>
             ${r.status !== 'open' ? `<button class="btn" data-act="reqStatus" data-id="${esc(r.id)}" data-v="open">Reopen</button>` : ''}
@@ -286,8 +286,8 @@
           <td><b>${esc(u.name)}</b>${statusOf(u) ? ' <span class="pill suspended">suspended</span>' : ''}<br><span class="muted">${esc(u.email || '')}</span><br><span class="muted">joined ${date(u.created_at)}</span></td>
           <td><span class="pill ${esc(u.plan)}">${esc(PLAN[u.plan])}</span><br><span class="muted">${u.is_admin ? 'staff' : u.comp_plan && u.plan !== u.paid_plan ? 'free access' + (u.comp_until ? ' until ' + date(u.comp_until) : ' (forever)') : u.paid_plan !== 'free' ? 'paying' + (u.paid_until ? ' · renews ' + date(u.paid_until) : '') : ''}</span></td>
           <td class="muted">${esc(u.brews)} brews · ${esc(u.reviews)} reviews${u.last_sign_in_at ? '<br>last seen ' + date(u.last_sign_in_at) : ''}</td>
-          <td><div class="row"><select data-gplan="${esc(u.id)}"><option value="pro">Pro</option><option value="pro_family">Elite</option><option value="">Remove</option></select>
-            <select data-gdays="${esc(u.id)}"><option value="30">30 days</option><option value="90">3 months</option><option value="365">1 year</option><option value="">Forever</option></select>
+          <td><div class="row"><select data-gplan="${esc(u.id)}" title="Free access plan"><option value="pro"${u.comp_plan === 'pro' ? ' selected' : ''}>Pro</option><option value="pro_family"${u.comp_plan === 'pro_family' ? ' selected' : ''}>Elite</option><option value="">Remove</option></select>
+            <select data-gdays="${esc(u.id)}" title="Length"><option value="30">30 days</option><option value="90">3 months</option><option value="365">1 year</option><option value=""${u.comp_plan && !u.comp_until ? ' selected' : ''}>Forever</option></select>
             <button class="link" data-act="grant" data-id="${esc(u.id)}">Apply</button></div></td>
           <td>${u.is_admin ? `<button class="link" data-act="staff" data-id="${esc(u.id)}" data-v="0">Remove staff</button>` : `<button class="link" data-act="staff" data-id="${esc(u.id)}" data-v="1">Make staff</button>`}</td>
           <td><button class="btn" data-act="userOpen" data-id="${esc(u.id)}">Details</button></td>
@@ -450,7 +450,7 @@
         if (!note) return toast('Write what they need to fix first');
         return run(() => api.reviewBusiness(id, false, note, null), 'Rejected — they can fix and resubmit');
       }
-      case 'bizStatus': return run(() => api.setBusiness(id, v, null, v === 'suspended' ? 'Suspended by Xpress Brew' : null), 'Updated');
+      case 'bizStatus': return run(() => api.setBusiness(id, v, null, v === 'suspended' ? 'Suspended by XpressBrew' : null), 'Updated');
       case 'bizTier': return run(() => api.setBusiness(id, b.dataset.status, val(`[data-tier="${id}"]`), null), 'Plan saved');
       case 'revTab': state.reviewsTab = v; return render('reviews');
       case 'keep': return run(() => api.moderate(id, true), 'Review restored');
@@ -563,7 +563,7 @@
     if (!email) return ($('#loginError').textContent = 'Type your email first, then tap “Forgot password”.');
     if (DEMO) return ($('#loginError').textContent = 'Demo mode.');
     await sb.auth.resetPasswordForEmail(email, { redirectTo: RESET_REDIRECT });
-    $('#loginError').textContent = 'If that email has an account, a reset link is on its way. Open it on your phone with Xpress Brew installed, then come back here.';
+    $('#loginError').textContent = 'If that email has an account, a reset link is on its way. Open it on your phone with XpressBrew installed, then come back here.';
   });
 
   $('#signOut').addEventListener('click', async () => {
