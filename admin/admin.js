@@ -339,7 +339,7 @@
 
     async circles(el) {
       const list = await api.circles(state.circleSearch);
-      el.innerHTML = `<h1>Circles</h1><p class="muted">Households and friends groups. A household's size limit follows the owner's plan (Starter 2, Pro 4, Elite unlimited).</p>
+      el.innerHTML = `<h1>Circles</h1><p class="muted">Households and friends groups. A household's size limit follows the owner's plan (Starter 2, Pro 4, Elite 6).</p>
         ${searchBar('circleSearch', 'circleSearch', state.circleSearch, 'Search circle, owner name or email')}
         ${list.length ? `<div class="scroll"><table class="table"><thead><tr><th>Circle</th><th>Owner</th><th>Owner plan</th><th>Members</th><th>Created</th><th></th></tr></thead><tbody>
         ${list.map((c) => `<tr><td><b>${esc(c.name)}</b><br><span class="muted">${esc(c.kind)}</span></td><td>${esc(c.owner || '—')}<br><span class="muted">${esc(c.owner_email || '')}</span></td>
@@ -379,10 +379,13 @@
           <label class="row" style="gap:8px"><input id="annActive" type="checkbox" ${a.active ? 'checked' : ''} style="width:auto;min-height:auto"> Show the announcement</label>
           <label>Title (up to 60 characters)<input id="annTitle" maxlength="60" value="${esc(a.title)}" placeholder="New roasts this week"></label>
           <label>Text (up to 280 characters)<textarea id="annText" maxlength="280" placeholder="Nomad Roasters published 3 new verified recipes.">${esc(a.text)}</textarea></label>
+          <p class="muted">Arabic version (optional) — people using the app in Arabic see this. Leave empty to show the English to everyone.</p>
+          <label>Arabic title<input id="annTitleAr" dir="rtl" lang="ar" maxlength="60" value="${esc(a.title_ar || '')}" placeholder="محاصيل جديدة هذا الأسبوع"></label>
+          <label>Arabic text<textarea id="annTextAr" dir="rtl" lang="ar" maxlength="280" placeholder="نشرت محمصة نوماد ٣ وصفات موثّقة جديدة.">${esc(a.text_ar || '')}</textarea></label>
           <label>Style<select id="annTone"><option value="info" ${a.tone !== 'warning' ? 'selected' : ''}>Good news (green)</option><option value="warning" ${a.tone === 'warning' ? 'selected' : ''}>Important (amber)</option></select></label>
           <div class="row"><button class="btn primary" data-act="saveAnnouncement">Save announcement</button></div></div>
         <div class="card"><h3>Free AI bag scans per month (Starter plan)</h3>
-          <p class="muted">Pro and Elite stay unlimited. Shown on the Plans and Me screens.</p>
+          <p class="muted">Pro and Elite get 60 a month (set in the app and the scan function). Shown on the Plans and Me screens.</p>
           <div class="row"><input id="freeScans" type="number" min="0" max="100" value="${esc(free)}" style="width:120px"><button class="btn primary" data-act="saveFreeScans">Save</button></div></div>
         <div class="card"><h3>Prices and plans</h3><p class="muted">Prices, free trials and offer codes are set in App Store Connect (Monetization → Subscriptions) and Google Play Console (Monetize → Subscriptions). The app shows the store's price automatically.</p>
           <div class="row"><a class="btn" href="https://appstoreconnect.apple.com" target="_blank" rel="noopener">App Store Connect</a><a class="btn" href="https://play.google.com/console" target="_blank" rel="noopener">Google Play Console</a></div></div>`;
@@ -505,7 +508,8 @@
       }
       case 'removeTerm': return run(() => api.removeTerm(v), 'Removed');
       case 'saveAnnouncement': return run(() => api.setSetting('announcement', {
-        active: $('#annActive').checked, title: (val('#annTitle') || '').trim(), text: (val('#annText') || '').trim(), tone: val('#annTone') || 'info',
+        active: $('#annActive').checked, title: (val('#annTitle') || '').trim(), text: (val('#annText') || '').trim(),
+        title_ar: (val('#annTitleAr') || '').trim(), text_ar: (val('#annTextAr') || '').trim(), tone: val('#annTone') || 'info',
       }), 'Announcement saved — the app shows it within a few minutes');
       case 'saveFreeScans': {
         const n = Number(val('#freeScans'));
